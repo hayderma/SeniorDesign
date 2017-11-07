@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/tabletop_demo.unity
+- path: Assets/scenes/plane_manipulation.unity
   isLoaded: 1
   isActive: 1

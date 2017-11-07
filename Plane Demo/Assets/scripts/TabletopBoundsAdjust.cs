@@ -17,6 +17,7 @@ public class TabletopBoundsAdjust : MonoBehaviour {
 	public List<float> pointDistances;
 	private float distanceRatio;
 	private Vector3 center;
+	public GameObject sphere;
 	// Use this for initialization
 	void Start () {
 		distanceRatio = 4.3f;
@@ -28,7 +29,7 @@ public class TabletopBoundsAdjust : MonoBehaviour {
 		sphere3.transform.localScale = new Vector3 (distanceScale, distanceScale, distanceScale);
 		sphere4 = GameObject.CreatePrimitive (PrimitiveType.Sphere);
 		RealignMesh ();
-
+		sphere.GetComponent<Gravity> ().SetGravity (gravity);
 	}
 
 	public void RealignMesh(){
