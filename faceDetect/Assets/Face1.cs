@@ -5,7 +5,6 @@ using System;
 using OpenCVForUnity;
 
 /*
- * Jeremiah Cox
  * FaceDetector:Face1  {}
  * @brief Face Detection Implementation
  * 
@@ -109,6 +108,7 @@ namespace myFaceDetector
 					Imgproc.rectangle (img, minPoint, maxPoint, rectColor, 2);
 					Debug.Log ("<color=green>" + string.Format ("pos x: {0},  pos y:{1}", face.x, face.y) + "</color>");
 					Debug.Log ("<color=blue>" + string.Format ("width: {0} by  height:{1}", face.width, face.height) + "</color>");
+				    OpenCVForUnity.Imgproc.GaussianBlur(new Mat(img,face),new Mat(img,face),new Size(0,0),10);
 				//}
 			}
 		}
