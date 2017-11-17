@@ -6,7 +6,6 @@ using OpenCVForUnity;
 using myFaceDetector;
 
 /**
- * Jeremiah Cox
  * public class webCameraOne : MonoBehaviour{}
  * 
  * @Brief   A Monostyle object hook to run our OpenCV program.
@@ -27,15 +26,12 @@ public class webCameraOne : MonoBehaviour {
 	WebCamTexture myCameraTest;
 	WebCamDevice inputDevice;
 	Texture2D myTexture;
-	Texture2D leftEye;
-	Texture2D rightEye;
 	Mat myMatt;
 	Face1 myDetector;
 	List<Mat> channels;
 	Mat equalizedMatt;
 	int guessCascadeSize = 0;
-	int camWidth = 2560; //Probly should be enums
-	int camHeight = 720; //Probly should be enums
+
 	/* Used to out put a few faces 
 	int frameCounter=0;
 	int fileCounter =0;
@@ -48,25 +44,19 @@ public class webCameraOne : MonoBehaviour {
 
 		//Setting Up Webcam
 		Debug.Log(WebCamTexture.devices);
-		//Choose device here
 		inputDevice = WebCamTexture.devices [0];
 		Debug.Log (inputDevice.name);
-		myCameraTest = new WebCamTexture (inputDevice.name,camWidth,camHeight);
-		//This scales the object we are drawing to to match camera input
-		gameObject.transform.localScale = new Vector3 (camWidth, camHeight, 1);
-		data = new Color32[camWidth * camHeight];	
-		//myTexture will process be used to process face detection then
-		//Split into leftEye and rightEye
-		myTexture = new Texture2D (camWidth, camHeight,TextureFormat.RGBA32, false);
-		rightEye = new Texture2D (camWidth/2, camHeight/2,TextureFormat.RGBA32, false);
-		leftEye = new Texture2D (camWidth/2, camHeight/2,TextureFormat.RGBA32, false);
-		myMatt = new Mat (new Size (camWidth, camHeight), CvType.CV_8UC4);
-		equalizedMatt = new Mat (new Size (camWidth, camHeight), CvType.CV_8UC4);
+		myCameraTest = new WebCamTexture (inputDevice.name, 640, 480);
+		gameObject.transform.localScale = new Vector3 (640, 480, 1);
+		data = new Color32[640*480];	
+		myTexture = new Texture2D (640, 480,TextureFormat.RGBA32, false);
+		myMatt = new Mat (new Size (640, 480), CvType.CV_8UC4);
+		equalizedMatt = new Mat (new Size (640, 480), CvType.CV_8UC4);
 		channels = new List<Mat>();
 		//Setting up render and telling camera to start playing.
 		//gameObject.GetComponent<Renderer> ().material.mainTexture = myCameraTest;
-		GameObject.Find ("other").GetComponent<Renderer> ().material.mainTexture = rightEye;
-		gameObject.GetComponent<Renderer> ().material.mainTexture = leftEye;
+		//GameObject.Find ("other").GetComponent<Renderer> ().material.mainTexture = myTexture;
+		gameObject.GetComponent<Renderer> ().material.mainTexture = myTexture;
 		myCameraTest.Play ();
 		//frameCounter = 0;
 	}
@@ -87,12 +77,17 @@ public class webCameraOne : MonoBehaviour {
 
         //Haar Cascades face detection. detectFaces converts it to greyscale.
 		myDetector.detectFaces (myMatt, guessCascadeSize);
+		///.................................................. myDetector.faceSquares
 		myDetector.doDrawRects (myMatt);
+			
+		/* Output some face detections to train eigen face.
+		if (frameCounter < 30) 
+		{
+			if(myDetector.outRectToFile (myMatt,ref fileCounter))
+			  frameCounter++;
+		}*/
+
 		Utils.matToTexture2D (myMatt, myTexture);
-		leftEye.SetPixels(myTexture.GetPixels (0, 0, camWidth / 2, camHeight));
-		leftEye.Apply ();
-		rightEye.SetPixels (myTexture.GetPixels (camWidth / 2, 0, camWidth / 2, camHeight));
-		rightEye.Apply ();
 		//This seems important
 		myTexture.Apply();
 	}
